@@ -1,0 +1,26 @@
+version: '3'
+services:
+  tinyos:
+    container_name: tinyos
+    restart: on-failure
+    build:
+      context: ./tinyos/
+      args:
+        USER_NAME: 'chung'
+        HOME_DIR: '/home/tinyos'
+    volumes:
+      - ./tinyos/src:/home/tinyos/src
+    ports:
+      - "6789:6789"
+  nodejs:
+    container_name: nodejs
+    restart: on-failure
+    build:
+      context: ./nodejs/
+      args:
+        USER_NAME: 'chung'
+        HOME_DIR: '/home/nodejs'
+    volumes:
+      - ./nodejs/src:/home/nodejs/src
+    depends_on:
+      - tinyos
