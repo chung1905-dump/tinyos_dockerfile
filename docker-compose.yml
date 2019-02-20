@@ -12,6 +12,7 @@ services:
       - ./tinyos/src:/home/tinyos/src
     ports:
       - "6789:6789"
+    privileged: true
   nodejs:
     container_name: nodejs
     restart: on-failure
@@ -22,5 +23,7 @@ services:
         HOME_DIR: '/home/nodejs'
     volumes:
       - ./nodejs/src:/home/nodejs/src
+    ports:
+      - "9876:9876"
     depends_on:
       - tinyos
