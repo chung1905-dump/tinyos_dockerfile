@@ -48,7 +48,7 @@ public class Listener {
         for (int i = 0; i < c.length; i++) {
             outputStream.writeBytes(String.valueOf(c[i]));
             System.out.println(c[i]);
-            if (i == c.length) {
+            if (i == c.length - 1) {
                 i = 0;
             }
             try {
