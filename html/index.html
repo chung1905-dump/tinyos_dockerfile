@@ -1,28 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="lib/socket.io.js"></script>
+    <script type='text/javascript' src='lib/socket.io.js'></script>
+    <script type='text/javascript' src='lib/knockout-3.5.0.js'></script>
     <script>
         'use strict';
+        var socket = io('http://localhost:9876');
+        var mainModel = {
+            dataArr: ko.observableArray()
+        };
+        socket.on('update', function (data) {
+            console.log(data);
+            if (data.time) {
+                data.time = Date(data.time).toLocaleString();
+            } else {
+                data.time = Date().toLocaleString();
+            }
+
+            mainModel.dataArr.push(data);
+        });
         document.addEventListener("DOMContentLoaded", function (event) {
-            var socket = io('http://localhost:9876');
-            var mainDiv = document.getElementById('main');
-            var span;
+            ko.applyBindings(mainModel, document.getElementById('main'));
             // console.log(window.location.protocol + '//' + window.location.hostname + ':' + 9876);
-            socket.on('update', function (data) {
-                console.log(data);
-                if (!data.hex) {
-                    return;
-                }
-                span = document.createElement('div');
-                span.innerHTML = data.hex;
-                mainDiv.appendChild(span);
-            });
         });
     </script>
-    <title>Test</title>
+    <title>CM5000 App</title>
+    <style>
+        th {
+            min-width: 150px;
+        }
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<div id="main"></div>
+<div id="main">
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Voltage</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+                <th>Visible Light</th>
+                <th>Infrared Light</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: dataArr">
+        <tr>
+            <td data-bind="text: id"></td>
+            <td data-bind="text: volt"></td>
+            <td data-bind="text: temp"></td>
+            <td data-bind="text: hum"></td>
+            <td data-bind="text: light"></td>
+            <td data-bind="text: tsr"></td>
+            <td data-bind="text: time"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
 </body>
 </html>
